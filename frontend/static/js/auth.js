@@ -3,15 +3,16 @@
  * Handles Firebase authentication state and API requests with user context
  */
 
-// Firebase configuration (same as login.html)
-const firebaseConfig = {
-    apiKey: "AIzaSyBC_8XvushvQAM-DaIaHyZwKrrrMnUdw2o",
-    authDomain: "ojt1-cfc0f.firebaseapp.com",
-    projectId: "ojt1-cfc0f",
-    storageBucket: "ojt1-cfc0f.firebasestorage.app",
-    messagingSenderId: "446786938762",
-    appId: "1:446786938762:web:2496436098abffc0990a73",
-    measurementId: "G-N359GY25SL"
+// Firebase configuration - loaded from firebase-config.js
+// Make sure firebase-config.js is loaded before this file
+const firebaseConfig = window.FIREBASE_CONFIG || {
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    storageBucket: "",
+    messagingSenderId: "",
+    appId: "",
+    measurementId: ""
 };
 
 // Auth state
@@ -23,14 +24,31 @@ let firebaseAuth = null;
  * Initialize Firebase and check authentication
  */
 async function initAuth() {
+    // Check if Firebase config is set
+    if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "YOUR_FIREBASE_API_KEY") {
+        console.error('Firebase not configured. Please update firebase-config.js with your credentials.');
+        // Allow access without auth for development
+        const storedUser = localStorage.getItem('codegalaxy_user');
+        if (storedUser) {
+            currentUser = JSON.parse(storedUser);
+            updateUserUI(currentUser);
+            return currentUser;
+        }
+        // Redirect to login if no stored user
+        if (!window.location.pathname.includes('/login')) {
+            window.location.href = '/login';
+        }
+        return null;
+    }
+
     try {
         // Dynamic import of Firebase modules
         const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js");
         const { getAuth, onAuthStateChanged, signOut } = await import("https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js");
-        
+
         firebaseApp = initializeApp(firebaseConfig);
         firebaseAuth = getAuth(firebaseApp);
-        
+
         return new Promise((resolve) => {
             onAuthStateChanged(firebaseAuth, (user) => {
                 if (user) {
@@ -40,13 +58,13 @@ async function initAuth() {
                         displayName: user.displayName,
                         photoURL: user.photoURL
                     };
-                    
+
                     // Store in localStorage for persistence
                     localStorage.setItem('codegalaxy_user', JSON.stringify(currentUser));
-                    
+
                     // Update UI with user info
                     updateUserUI(currentUser);
-                    
+
                     resolve(currentUser);
                 } else {
                     // No user signed in, redirect to login
@@ -75,7 +93,7 @@ async function initAuth() {
 function updateUserUI(user) {
     // Create user profile element if it doesn't exist
     let userProfile = document.getElementById('userProfile');
-    
+
     if (!userProfile) {
         userProfile = document.createElement('div');
         userProfile.id = 'userProfile';
@@ -93,27 +111,27 @@ function updateUserUI(user) {
                 </button>
             </div>
         `;
-        
+
         // Insert after header
         const header = document.querySelector('.app-header');
         if (header) {
             header.appendChild(userProfile);
         }
     }
-    
+
     // Update user info
     const avatar = document.getElementById('userAvatar');
     const name = document.getElementById('userName');
     const logoutBtn = document.getElementById('logoutBtn');
-    
+
     if (avatar) {
         avatar.src = user.photoURL || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(user.displayName || user.email) + '&background=7c3aed&color=fff';
     }
-    
+
     if (name) {
         name.textContent = user.displayName || user.email?.split('@')[0] || 'User';
     }
-    
+
     if (logoutBtn) {
         logoutBtn.addEventListener('click', handleSignOut);
     }
@@ -171,18 +189,18 @@ function getCurrentUser() {
  */
 async function authFetch(url, options = {}) {
     const userId = getCurrentUserId();
-    
+
     if (!userId) {
         window.location.href = '/login';
         throw new Error('User not authenticated');
     }
-    
+
     // Add user ID header
     const headers = {
         ...options.headers,
         'X-User-Id': userId
     };
-    
+
     return fetch(url, {
         ...options,
         headers

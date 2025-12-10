@@ -69,7 +69,25 @@ Edit `.env` and add your MongoDB connection string:
 MONGODB_URI=mongodb+srv://your_username:your_password@cluster0.xxxxx.mongodb.net/codegalaxy?retryWrites=true&w=majority
 ```
 
-### 6. Run the Application
+### 6. Configure Firebase Authentication
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Create a new project or select an existing one
+3. Go to **Project Settings** > **Your Apps** > **Web App**
+4. Copy your Firebase configuration
+5. Create the Firebase config file:
+
+```bash
+cp frontend/static/js/firebase-config.js.example frontend/static/js/firebase-config.js
+```
+
+6. Edit `frontend/static/js/firebase-config.js` and replace with your credentials
+7. Enable authentication providers in **Authentication** > **Sign-in method**:
+   - Email/Password
+   - Google
+   - Facebook (optional)
+
+### 7. Run the Application
 
 ```bash
 python -m backend.app

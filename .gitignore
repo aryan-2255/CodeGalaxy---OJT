@@ -33,6 +33,9 @@ venv.bak/
 .env.local
 .env.production
 
+# Firebase Config (contains API keys)
+frontend/static/js/firebase-config.js
+
 # IDEs
 .vscode/
 .idea/

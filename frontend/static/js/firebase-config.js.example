@@ -1,0 +1,31 @@
+/**
+ * CodeGalaxy Firebase Configuration Example
+ * 
+ * SETUP INSTRUCTIONS:
+ * 1. Copy this file to 'firebase-config.js' (remove .example)
+ * 2. Replace the placeholder values with your Firebase credentials
+ * 3. Get your credentials from: Firebase Console > Project Settings > Your Apps
+ * 
+ * IMPORTANT: Never commit firebase-config.js to version control!
+ * It's already in .gitignore for your protection.
+ * 
+ * SECURITY NOTE:
+ * Firebase API keys are designed to be public and are protected by:
+ * - Firebase Security Rules
+ * - Domain restrictions (set in Firebase Console > Authentication > Settings)
+ * - App Check (recommended for production)
+ */
+
+const FIREBASE_CONFIG = {
+    // Replace these with your Firebase project credentials
+    apiKey: "YOUR_FIREBASE_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+    appId: "YOUR_APP_ID",
+    measurementId: "YOUR_MEASUREMENT_ID"  // Optional, for Google Analytics
+};
+
+// Export for use in other modules
+window.FIREBASE_CONFIG = FIREBASE_CONFIG;
