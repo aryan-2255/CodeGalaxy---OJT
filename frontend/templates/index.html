@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeGalaxy - Life Planner</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/galaxy-bg.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Animated Galaxy Background -->
+    <div class="galaxy-background">
+        <canvas id="galaxyBgCanvas"></canvas>
+    </div>
+    <div id="toasts" aria-live="polite"></div>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo">
+                <!-- <div class="logo-icon"></div> -->
+                <h1 class="logo-title">CodeGalaxy</h1>
+            </div>
+            <div class="header-subtitle">All your thoughts in one private place.</div>
+            <p class="hero-subline">Where every small step leaves a star behind.</p>
+            <p class="hero-subline hero-subline--muted">A galaxy shaped by your discipline.</p>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Overview Panel -->
+            <section class="panel overview-panel" id="overview">
+                <div class="panel-header">
+                    <div>
+                        <h2>Overview</h2>
+                        <div class="overview-subtitle">
+                            <span id="statTasks">0 / 0 tasks completed</span>
+                            <span class="dot-separator">•</span>
+                            <span id="statFocus">0 min focus</span>
+                            <span class="dot-separator">•</span>
+                            <span id="statStreak">0 day streak</span>
+                        </div>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all">All Tasks</button>
+                        <button class="filter-btn" data-filter="Personal">Personal</button>
+                        <button class="filter-btn" data-filter="Work">Work</button>
+                        <button class="filter-btn" data-filter="Life">Life</button>
+                        <button class="filter-btn" data-filter="Study">Study</button>
+                    </div>
+                </div>
+                <div class="task-list" id="taskList">
+                    <!-- Tasks will be loaded here -->
+                </div>
+                <button class="add-task-btn" id="addTaskBtn">+ Add Task</button>
+            </section>
+
+
+
+            <!-- Upcoming Panel -->
+            <section class="panel upcoming-panel" id="upcoming">
+                <div class="panel-header">
+                    <h2>Upcoming</h2>
+                </div>
+                <div class="upcoming-list" id="upcomingList">
+                    <!-- Upcoming events will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Calendar Panel -->
+            <section class="panel calendar-panel" id="calendar">
+                <div class="panel-header">
+                    <h2>Calendar</h2>
+                    <div class="calendar-controls">
+                        <button id="prevMonth">←</button>
+                        <span id="currentMonth">January 2024</span>
+                        <button id="nextMonth">→</button>
+                    </div>
+                </div>
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar right-column z-top">
+            <!-- Focus Session / Timer -->
+            <section class="panel timer-panel focus-session" id="timer">
+                <div class="panel-header">
+                    <h2>Focus Session</h2>
+                </div>
+                <div class="timer-body">
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-controls">
+                        <button class="btn-secondary timer-btn" data-minutes="15">15m</button>
+                        <button class="btn-secondary timer-btn" data-minutes="25">25m</button>
+                        <button class="btn-secondary timer-btn" data-minutes="45">45m</button>
+                    </div>
+                    <!-- Mood selector removed as requested -->
+                    <div class="custom-timer">
+                        <label for="customTimerInput">Custom Minutes</label>
+                        <div class="custom-timer-controls">
+                            <input type="number" id="customTimerInput" min="1" max="180" value="25"
+                                aria-label="Custom focus duration in minutes">
+                            <button type="button" class="btn-secondary" id="applyCustomTimerBtn">Set</button>
+                        </div>
+                    </div>
+                    <div class="timer-actions">
+                        <button class="btn-primary" id="startSessionBtn">Start Focus</button>
+                        <button class="btn-secondary" id="resetSessionBtn">Reset</button>
+                    </div>
+                    <p class="timer-hint">When the timer finishes, a new celestial body will be born in your galaxy.</p>
+                </div>
+            </section>
+
+            <!-- Music Player -->
+            <section class="panel music-panel music-card" id="music">
+                <div class="panel-header">
+                    <h2>Play Now</h2>
+                    <button class="btn-secondary btn-sm" id="spotifyBtn" title="Open in Spotify"
+                        style="padding: 4px 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141 4.2-1.32 9.6-0.66 13.38 1.68.42.298.6.838.36 1.14zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="music-player">
+                    <div class="album-art" id="albumArt">
+                        <div class="play-icon">▶</div>
+                    </div>
+
+                    <div class="audio-controls-row"
+                        style="margin-bottom: 1rem; display: flex; gap: 0.5rem; justify-content: center;">
+                        <select id="moodSelect" class="form-select"
+                            style="padding: 4px 8px; border-radius: 4px; background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border-color);">
+                            <option value="Focus">Focus</option>
+                            <option value="Calm">Calm</option>
+                            <option value="Chill">Chill</option>
+                            <option value="Energy">Energy</option>
+                            <option value="DeepWork">Deep Work</option>
+                            <option value="Night">Night</option>
+                        </select>
+                    </div>
+
+                    <div class="now-playing">
+                        <div class="track-title" id="trackTitle">Select a Mood</div>
+                        <div class="track-artist" id="trackArtist">Local Audio</div>
+                    </div>
+
+                    <div class="player-controls">
+                        <button class="control-btn play-btn" id="playBtn">▶</button>
+                    </div>
+
+                    <div class="volume-control"
+                        style="display: flex; align-items: center; gap: 10px; margin-top: 1rem; justify-content: center;">
+                        <span style="font-size: 0.8rem; color: var(--text-secondary);">Vol</span>
+                        <input type="range" id="volumeSlider" min="0" max="100" value="50"
+                            style="width: 100px; accent-color: var(--accent-primary);">
+                    </div>
+                </div>
+            </section>
+
+
+        </aside>
+
+        <!-- Footer (Galaxy) -->
+        <footer class="app-footer">
+            <section class="panel galaxy-panel galaxy-area" id="galaxy">
+                <div class="panel-header">
+                    <h2>🌌 Your Galaxy</h2>
+                    <div class="galaxy-stats">
+                        <span id="galaxyCount">0 stars</span>
+                    </div>
+                </div>
+                <canvas id="galaxyCanvas" class="galaxy-canvas" width="300" height="300"></canvas>
+                <div class="galaxy-controls" aria-label="Galaxy layout controls">
+                    <div class="galaxy-control-row">
+                        <label for="constellationSelect" class="sr-only">Constellation presets</label>
+                        <select id="constellationSelect">
+                            <option value="Orion">Orion</option>
+                            <option value="Cassiopeia">Cassiopeia</option>
+                            <option value="Lyra">Lyra</option>
+                            <option value="Grid">Grid</option>
+                        </select>
+                        <button class="btn-secondary" id="applyConstellation">Apply</button>
+                        <label class="lock-toggle">
+                            <input type="checkbox" id="lockConstellation">
+                            Lock pattern
+                        </label>
+                    </div>
+                    <div class="galaxy-control-row">
+                        <button class="btn-secondary" id="saveLayout" disabled>Save Layout</button>
+                        <button class="btn-secondary" id="revertLayout" disabled>Revert</button>
+                        <button class="btn-secondary" id="resetGalaxy">Reset Galaxy</button>
+                    </div>
+                </div>
+                <div class="galaxy-footer">
+                    <div class="galaxy-actions">
+                        <button class="btn-secondary" id="exportGalaxyBtn">Export PNG</button>
+                    </div>
+                    <p class="galaxy-hint">Complete tasks and sessions to grow your galaxy.</p>
+                </div>
+                <div id="galaxyToasts" aria-live="polite"></div>
+            </section>
+        </footer>
+    </div>
+
+    <div class="site-footer-line">
+        CodeGalaxy — where procrastination ends, and the Big Bang begins | OJT Project - Sakshi & Aryan
+    </div>
+
+    <!-- Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New Task</h3>
+                <button class="close-btn" id="closeModal">×</button>
+            </div>
+            <form id="taskForm">
+                <div class="form-group">
+                    <label for="taskTitleInput">Title</label>
+                    <input type="text" id="taskTitleInput" required>
+                </div>
+                <div class="form-group">
+                    <label for="taskDescInput">Description</label>
+                    <textarea id="taskDescInput" rows="3"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="taskDateInput">Date</label>
+                        <input type="date" id="taskDateInput" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="taskTimeInput">Time (Optional)</label>
+                        <input type="time" id="taskTimeInput">
+                    </div>
+                    <div class="form-group">
+                        <label for="taskPriorityInput">Priority</label>
+                        <select id="taskPriorityInput">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="taskCategoryInput">Category</label>
+                    <select id="taskCategoryInput">
+                        <option value="Personal">Personal</option>
+                        <option value="Work">Work</option>
+                        <option value="Life">Life</option>
+                        <option value="Study">Study</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Calendar Task View Panel -->
+    <div class="task-view-panel" id="taskViewPanel">
+        <div class="task-view-header">
+            <h3 id="taskViewDate">January 1, 2024</h3>
+            <button class="close-btn" id="closeTaskView">×</button>
+        </div>
+        <div class="task-view-content" id="taskViewList">
+            <!-- Tasks for the selected date will be loaded here -->
+        </div>
+        <div class="task-view-footer">
+            <button class="btn-primary btn-sm" id="addTaskForDateBtn">+ Add Task</button>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="confirmTitle">Confirm Action</h3>
+                <button class="close-btn" id="closeConfirmModal">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">Are you sure?</p>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="cancelConfirmBtn">Cancel</button>
+                <button class="btn-primary" id="applyConfirmBtn">Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audioPlayer"></audio>
+
+    <!-- Background animation must load first -->
+    <script src="{{ url_for('static', filename='js/galaxy-bg.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/toast.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/audioController.js') }}"></script>
+    <!-- Authentication must load before app.js -->
+    <script src="{{ url_for('static', filename='js/auth.js') }}" type="module"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/galaxy.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/timer.js') }}"></script>
+</body>
+
+</html>

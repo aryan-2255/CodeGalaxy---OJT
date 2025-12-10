@@ -1,0 +1,108 @@
+╔══════════════════════════════════════════════════════════════╗
+║         🚀 CodeGalaxy Deployment Checklist 🚀                ║
+╚══════════════════════════════════════════════════════════════╝
+
+BEFORE YOU START:
+□ You have a GitHub account
+□ You have a Vercel account  
+□ You have a MongoDB Atlas account
+□ Git is installed on your computer
+
+═══════════════════════════════════════════════════════════════
+
+STEP 1: MONGODB ATLAS SETUP (5 minutes)
+□ Go to https://cloud.mongodb.com/
+□ Create a new project
+□ Create a free cluster (M0)
+□ Create database user (save password!)
+□ Add IP whitelist: 0.0.0.0/0
+□ Get connection string
+□ Replace <password> in connection string
+□ Add /codegalaxy before the ?
+□ Save complete connection string
+
+Your connection string should look like:
+mongodb+srv://user:PASSWORD@cluster.mongodb.net/codegalaxy?retryWrites=true&w=majority
+
+═══════════════════════════════════════════════════════════════
+
+STEP 2: PUSH TO GITHUB (3 minutes)
+□ Open terminal in project folder
+□ Run: git init
+□ Run: git add .
+□ Run: git commit -m "Initial commit: CodeGalaxy app"
+□ Create new repository on GitHub
+□ Copy the remote URL
+□ Run: git remote add origin YOUR_GITHUB_URL
+□ Run: git branch -M main
+□ Run: git push -u origin main
+
+═══════════════════════════════════════════════════════════════
+
+STEP 3: DEPLOY TO VERCEL (5 minutes)
+□ Go to https://vercel.com/
+□ Sign in with GitHub
+□ Click "New Project"
+□ Import your CodeGalaxy repository
+□ Click "Import"
+□ Add environment variable:
+  Name: MONGODB_URI
+  Value: [paste your MongoDB connection string]
+□ Select: Production, Preview, Development
+□ Click "Deploy"
+□ Wait 2-3 minutes
+□ Click "Visit" when done
+
+═══════════════════════════════════════════════════════════════
+
+STEP 4: TEST YOUR DEPLOYMENT (2 minutes)
+□ Homepage loads successfully
+□ Create a new task
+□ Complete the task
+□ Verify a white star appears in galaxy ⭐
+□ Start focus timer
+□ Verify colored star appears when done 🌟
+□ Check statistics update
+□ Test calendar functionality
+□ Try music player
+
+═══════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING:
+If something doesn't work:
+□ Check Vercel logs (Project → Deployments → View Function Logs)
+□ Verify MONGODB_URI in Vercel environment variables
+□ Check MongoDB Atlas IP whitelist includes 0.0.0.0/0
+□ Visit /status endpoint to check database connection
+□ Check browser console (F12) for errors
+
+═══════════════════════════════════════════════════════════════
+
+HELPFUL COMMANDS:
+
+Test locally:
+  python -m backend.app
+
+Check status:
+  curl http://localhost:3000/status
+
+Kill port 3000:
+  lsof -ti:3000 | xargs kill -9
+
+═══════════════════════════════════════════════════════════════
+
+DOCUMENTATION:
+□ README.md - Full project documentation
+□ DEPLOYMENT_GUIDE.md - Detailed deployment steps
+□ QUICK_START.md - Quick setup guide
+□ PROJECT_SUMMARY.md - What was done
+
+═══════════════════════════════════════════════════════════════
+
+✅ DEPLOYMENT COMPLETE!
+
+Your app is live at: https://your-project.vercel.app
+
+Share it with friends and start building your galaxy! 🌌✨
+
+═══════════════════════════════════════════════════════════════

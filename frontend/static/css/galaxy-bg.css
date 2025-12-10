@@ -1,0 +1,28 @@
+/* ==================== GALAXY BACKGROUND ==================== */
+.galaxy-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+#galaxyBgCanvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Ensure body and app-container sit above background */
+body {
+    position: relative;
+}
+
+.app-container {
+    position: relative;
+    z-index: 1;
+}
+
