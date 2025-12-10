@@ -712,9 +712,22 @@
             onAuthStateChanged 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // Firebase configuration - Replace with your own credentials
-        // Get these from Firebase Console > Project Settings > Your Apps
-        const firebaseConfig = window.FIREBASE_CONFIG || {
+        // Firebase configuration
+        // Priority: 1. Environment variables (injected by Flask) 2. Local config file 3. Placeholder
+        const envConfig = {
+            apiKey: "{{ firebase_api_key }}",
+            authDomain: "{{ firebase_auth_domain }}",
+            projectId: "{{ firebase_project_id }}",
+            storageBucket: "{{ firebase_storage_bucket }}",
+            messagingSenderId: "{{ firebase_messaging_sender_id }}",
+            appId: "{{ firebase_app_id }}",
+            measurementId: "{{ firebase_measurement_id }}"
+        };
+
+        // Check if env config is valid (has apiKey)
+        const hasEnvConfig = envConfig.apiKey && envConfig.apiKey.length > 0;
+
+        const firebaseConfig = hasEnvConfig ? envConfig : (window.FIREBASE_CONFIG || {
             apiKey: "YOUR_FIREBASE_API_KEY",
             authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
             projectId: "YOUR_PROJECT_ID",
@@ -722,7 +735,7 @@
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
             appId: "YOUR_APP_ID",
             measurementId: "YOUR_MEASUREMENT_ID"
-        };
+        });
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);

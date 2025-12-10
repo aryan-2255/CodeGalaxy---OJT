@@ -50,6 +50,19 @@ def create_app() -> Flask:
     def login():
         return render_template("login.html")
 
+    # Inject Firebase config into all templates
+    @app.context_processor
+    def inject_firebase_config():
+        return dict(
+            firebase_api_key=os.getenv("FIREBASE_API_KEY", ""),
+            firebase_auth_domain=os.getenv("FIREBASE_AUTH_DOMAIN", ""),
+            firebase_project_id=os.getenv("FIREBASE_PROJECT_ID", ""),
+            firebase_storage_bucket=os.getenv("FIREBASE_STORAGE_BUCKET", ""),
+            firebase_messaging_sender_id=os.getenv("FIREBASE_MESSAGING_SENDER_ID", ""),
+            firebase_app_id=os.getenv("FIREBASE_APP_ID", ""),
+            firebase_measurement_id=os.getenv("FIREBASE_MEASUREMENT_ID", "")
+        )
+
     # Initialize DB indexes
     try:
         ensure_indexes()

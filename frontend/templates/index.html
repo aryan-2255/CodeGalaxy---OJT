@@ -306,6 +306,22 @@
     <script src="{{ url_for('static', filename='js/audioController.js') }}"></script>
     <!-- Authentication must load before app.js -->
     <script src="{{ url_for('static', filename='js/firebase-config.js') }}"></script>
+    <script>
+        // Inject environment config if available
+        const envConfig = {
+            apiKey: "{{ firebase_api_key }}",
+            authDomain: "{{ firebase_auth_domain }}",
+            projectId: "{{ firebase_project_id }}",
+            storageBucket: "{{ firebase_storage_bucket }}",
+            messagingSenderId: "{{ firebase_messaging_sender_id }}",
+            appId: "{{ firebase_app_id }}",
+            measurementId: "{{ firebase_measurement_id }}"
+        };
+        
+        if (envConfig.apiKey && envConfig.apiKey.length > 0) {
+            window.FIREBASE_CONFIG = envConfig;
+        }
+    </script>
     <script src="{{ url_for('static', filename='js/auth.js') }}" type="module"></script>
     <script src="{{ url_for('static', filename='js/app.js') }}"></script>
     <script src="{{ url_for('static', filename='js/galaxy.js') }}"></script>
