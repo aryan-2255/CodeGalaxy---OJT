@@ -13,11 +13,11 @@
     <style>
         :root {
             --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-tertiary: #1a1a2e;
-            --accent-primary: #7c3aed;
-            --accent-secondary: #a855f7;
-            --accent-glow: rgba(124, 58, 237, 0.4);
+            --bg-secondary: #0f172a;
+            --bg-tertiary: #1e293b;
+            --accent-primary: #3b82f6; /* Blue instead of Purple */
+            --accent-secondary: #60a5fa; /* Lighter Blue */
+            --accent-glow: rgba(59, 130, 246, 0.4); /* Blue Glow */
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -119,7 +119,7 @@
             width: 100%;
             max-width: 420px;
             box-shadow: 
-                0 0 80px rgba(124, 58, 237, 0.15),
+                0 0 80px rgba(59, 130, 246, 0.15),
                 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: cardFloat 6s ease-in-out infinite;
         }
@@ -151,7 +151,7 @@
 
         @keyframes pulse {
             0%, 100% { box-shadow: 0 0 40px var(--accent-glow); }
-            50% { box-shadow: 0 0 60px var(--accent-glow), 0 0 100px rgba(168, 85, 247, 0.2); }
+            50% { box-shadow: 0 0 60px var(--accent-glow), 0 0 100px rgba(96, 165, 250, 0.2); }
         }
 
         .logo h1 {
@@ -196,12 +196,12 @@
         .auth-tab.active {
             background: var(--accent-primary);
             color: var(--text-primary);
-            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .auth-tab:hover:not(.active) {
             color: var(--text-primary);
-            background: rgba(124, 58, 237, 0.1);
+            background: rgba(59, 130, 246, 0.1);
         }
 
         /* Form Styles */
@@ -244,7 +244,7 @@
         .form-input:focus {
             outline: none;
             border-color: var(--accent-primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
         }
 
         .form-input.error {
@@ -307,7 +307,7 @@
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.4);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
         }
 
         .submit-btn:disabled {
